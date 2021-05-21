@@ -1,7 +1,7 @@
-#lang at-exp racket/base
+#lang racket/base
 
 (require racket/list racket/port racket/format racket/string racket/provide
-         http-client json)
+         http-client)
 (provide (matching-identifiers-out #rx"^sina\\/.*" (all-defined-out)))
 
 
@@ -10,20 +10,14 @@
   (http-get "https://interface.sina.cn"
             #:path "news/wap/fymap2020_data.d.json"))
 
-(define data (hash-ref (http-response-body res) 'data))
-(define data/list (hash-ref data 'list))
-(define data/otherlist (hash-ref data 'otherlist))
-
-;;;;;;;
-(define henan (findf (lambda (i) (equal? (hash-ref i 'name) "河南"))
-                     data/list))
-(define zhengzhou (findf (lambda (i) (equal? (hash-ref i 'name) "郑州市"))
-                         (hash-ref henan 'city)))
+(define sina/data (hash-ref (http-response-body res) 'data))
+(define sina/data/list (hash-ref sina/data 'list))
+(define sina/data/otherlist (hash-ref sina/data 'otherlist))
 
 
-(define (sina/contries/filter-by column-name)
+(define (sina/contries/sort+filter-by type)
   (define sorted-contries
-    (sort data/otherlist
+    (sort sina/data/otherlist
           (lambda (i1 i2)
             (define v1 (hash-ref i1 'value))
             (define v2 (hash-ref i2 'value))
@@ -33,5 +27,4 @@
                (string->number v2)))))
   (for/list ([i sorted-contries])
     (cons (hash-ref i 'name)
-          (string->number (hash-ref i column-name)))))
-
+          (string->number (hash-ref i type)))))

@@ -26,7 +26,8 @@
 
 (require (file "qq.rkt")
          (file "sina.rkt"))
-(provide all-from-out)
+(provide (all-from-out (file "qq.rkt")
+                       (file "sina.rkt")))
 
 
 

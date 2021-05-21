@@ -22,3 +22,21 @@ jobs:
         run: raco setup --check-pkg-deps --unused-pkg-deps covid-19
       - name: Testing covid-19
         run: raco test -x -p covid-19
+
+      - name: build docs for GP
+        run: |
+          raco scribble \
+          --dest doc \
+          --dest-name index \
+          ++main-xref-in \
+          --redirect-main https://docs.racket-lang.org/ \
+          --redirect https://docs.racket-lang.org/local-redirect/index.html \
+          scribblings/covid-19.scrbl
+      - name: Deploy to GitHub Pages
+        if: success()
+        uses: crazy-max/ghaction-github-pages@v1.2.5
+        with:
+          target_branch: gh-pages
+          build_dir: doc
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

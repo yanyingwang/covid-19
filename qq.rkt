@@ -1,9 +1,7 @@
-#lang at-exp racket/base
+#lang racket/base
 
 (require racket/list racket/port racket/format racket/string racket/provide
-         http-client json
-         (file "parameters.rkt")
-         (file "tools.rkt"))
+         http-client json)
 (provide (matching-identifiers-out #rx"^qq\\/.*" (all-defined-out)))
 
 
@@ -11,17 +9,18 @@
   (http-get "https://view.inews.qq.com"
             #:path "/g2/getOnsInfo"
             #:data (hasheq 'name "disease_h5")))
-(define data
+
+(define qq/data
   (string->jsexpr (hash-ref (http-response-body res) 'data)))
-(define china-total (hash-ref data 'chinaTotal))
-(define china-add (hash-ref data 'chinaAdd))
-(define all-provinces (hash-ref (car (hash-ref data 'areaTree)) 'children))
+(define qq/data/china-total (hash-ref qq/data 'chinaTotal))
+(define qq/data/china-add (hash-ref qq/data 'chinaAdd))
+(define qq/data/all-provinces (hash-ref (car (hash-ref qq/data 'areaTree)) 'children))
 
 
 ;;;;;;; helpers
 (define (qq/get-num node type1 type2)
   (if node
-      (hash-ref (hash-ref node type1) type2)
+      (hash-ref (hash-ref node type2) type1)
       #f))
 
 (define (qq/get-num* prov-name
@@ -33,12 +32,12 @@
       (hash-ref (hash-ref province type2) type1)
       #f))
 
-(define (qq/filter-by type1 type2) ;; type1 <= { 'today 'total } type2 <= { 'confirm 'dead }
+(define (qq/filter-by type1 type2) ;; type1 <= { 'confirm 'dead } type2 <= { 'today 'total }
   (define sorted-provinces
-    (sort all-provinces
+    (sort qq/data/all-provinces
           (lambda (i1 i2)
-            (> (hash-ref (hash-ref i1 type1) type2)
-               (hash-ref (hash-ref i2 type1) type2)))))
+            (> (hash-ref (hash-ref i1 type2) type1)
+               (hash-ref (hash-ref i2 type2) type1)))))
   (for/list ([i sorted-provinces])
     (cons (hash-ref i 'name)
           (hash-ref (hash-ref i 'today) 'confirm)))
@@ -51,7 +50,7 @@
        (set! city-name (symbol->string city-name)))
   (define province (findf (lambda (i)
                             (equal? (hash-ref i 'name) name))
-                          all-provinces))
+                          qq/data/all-provinces))
   (if city-name
       (findf (lambda (i)
            (equal? (hash-ref i 'name) city-name))
