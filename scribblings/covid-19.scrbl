@@ -33,17 +33,19 @@ Racket wrapper of QQ/Sina's COVID-19 API
 Values that returned directly from requesting QQ's covid-19 API.
 }
 
-@defproc[(qq/get-province [province-name (or/c string? symbol?)]) hash-eq?]{
-Returns data of a specified @racket[province-name] of China.
+@defproc[(qq/get-region [province-name (or/c string? symbol?)]
+                        [city-name (or/c string? symbol?)]) hash-eq?]{
+Returns data of a specified @racket[province-name] of China or data of its specified @racket[city-name] if provided.
 @examples[#:eval the-eval
-(qq/get-province '河南)
+(qq/get-region '河南)
+(qq/get-region '河南 '郑州)
 ]
 }
 
 @defproc[(qq/get-num [node-data (hash-eq?)] [type1 (or/c 'confirm 'dead) 'confirm] [type2 (or/c 'today 'total) 'today]) number?]{
 Returns the number of @racket[type1] in @racket[type2] of the @racket[node-data], which @racket[node-data] is the result of @racket[qq/get-province].
 @examples[#:eval the-eval
-(qq/get-num (qq/get-province '河南) 'confirm 'total)
+(qq/get-num (qq/get-region '河南) 'confirm 'total)
 ]
 }
 
@@ -57,6 +59,7 @@ Returns a number of @racket[type1] in @racket[type2] of a specified @racket[city
 (qq/get-num* '河南)
 (qq/get-num* '河南 'confirm 'total)
 (qq/get-num* '河南 'confirm 'total #:city '郑州)
+(qq/get-num* '上海 'confirm 'total #:city '徐汇)
 ]}
 
 @defproc[(qq/sort+filter-by

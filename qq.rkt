@@ -17,7 +17,7 @@
 (define qq/data/all-provinces (hash-ref (car (hash-ref qq/data 'areaTree)) 'children))
 
 
-(define (qq/get-province name [city-name #f])
+(define (qq/get-region name [city-name #f])
   (and (symbol? name)
        (set! name (symbol->string name)))
   (and (symbol? city-name)
@@ -41,10 +41,10 @@
                      #:city [city-name #f]
                      [type1 'confirm]
                      [type2 'today])
-  (define province
-    (qq/get-province province-name city-name))
-  (if province
-      (hash-ref (hash-ref province type2) type1)
+  (define region
+    (qq/get-region province-name city-name))
+  (if region
+      (hash-ref (hash-ref region type2) type1)
       #f))
 
 (define (qq/sort+filter-by type1 type2) ;; type1 <= { 'confirm 'dead } type2 <= { 'today 'total }
