@@ -16,7 +16,15 @@
 Racket wrapper of QQ/Sina's COVID-19 API
 
 @defmodule[covid-19]
-@smaller{@racket[(require covid)] will do the same as @racket[(require covid/qq covid/sina)].}
+@itemlist[
+@item{@smaller{@racket[(require covid)] will do the same as @racket[(require covid/qq covid/sina)].}}
+@item{@smaller{There is also a website whose data is drived by this pkg for you to check with:
+@linebreak[]
+@url{https://www.yanying.wang/daily-report/}.}}
+]
+
+
+
 
 @section{QQ}
 @defmodule[covid-19/qq]
