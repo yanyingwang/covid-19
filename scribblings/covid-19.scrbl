@@ -13,13 +13,13 @@
 
 @title{covid-19}
 @author[@author+email["Yanying Wang" "yanyingwang1@gmail.com"]]
-
+Racket wrapper of QQ/Sina's COVID-19 API
 
 @defmodule[covid-19]
-Is same as @racket[(require covid/qq covid/sina)]
+@smaller{@racket[(require covid)] will do the same as @racket[(require covid/qq covid/sina)].}
 
+@section{QQ}
 @defmodule[covid-19/qq]
-
 @deftogether[(
 @defthing[qq/data hash-eq?]
 @defthing[qq/data/china-total hash-eq?]
@@ -36,7 +36,7 @@ Returns data of a specified province @racket[name] of China.
 ]
 }
 
-@defproc[(qq/get-num [node (hash-eq?)] [type1 (or/c 'confirm 'dead)] [type2 (or/c 'today 'total)]) number?]{
+@defproc[(qq/get-num [node-data (hash-eq?)] [type1 (or/c 'confirm 'dead)] [type2 (or/c 'today 'total)]) number?]{
 Returns a number of @racket[type1] in @racket[type2] of a @racket[node], which @racket[node] is the results of @racket[qq/get-province].
 @examples[#:eval the-eval
 (qq/get-num (qq/get-province '河南) 'confirm 'total)
@@ -64,6 +64,7 @@ Sorting and filting @racket[qq/data/all-provinces] by @racket[type1] and @racket
 }
 
 
+@section{Sina}
 @defmodule[covid-19/sina]
 @deftogether[(
 @defthing[sina/data hash-eq?]
