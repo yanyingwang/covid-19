@@ -1,3 +1,4 @@
 covid-19
 ========
-README text here.
+
+Please check the doc link in About.

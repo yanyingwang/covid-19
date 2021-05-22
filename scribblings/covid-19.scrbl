@@ -5,8 +5,6 @@
                     covid-19/sina]
          scribble/eval]
 
-@; @(define the-eval
-@;    (make-eval-factory '(covid-19 racket/pretty)))
 @(define the-eval
          (make-base-eval '(require covid-19 racket/pretty)
                          '(pretty-print-depth 0)))
@@ -17,13 +15,11 @@ Racket wrapper of QQ/Sina's COVID-19 API
 
 @defmodule[covid-19]
 @itemlist[
-@item{@smaller{@racket[(require covid)] will do the same as @racket[(require covid/qq covid/sina)].}}
-@item{@smaller{There is also a website whose data is drived by this pkg for you to check with:
+@item{@racket[(require covid)] will do the same as @racket[(require covid/qq covid/sina)].}
+@item{There is also a website whose data is drived by this pkg for you to check with:
 @linebreak[]
-@url{https://www.yanying.wang/daily-report/}.}}
+@url{https://www.yanying.wang/daily-report/}.}
 ]
-
-
 
 
 @section{QQ}
@@ -37,15 +33,15 @@ Racket wrapper of QQ/Sina's COVID-19 API
 Values that returned directly from requesting QQ's covid-19 API.
 }
 
-@defproc[(qq/get-province [name (or/c string? symbol?)]) hash-eq?]{
-Returns data of a specified province @racket[name] of China.
+@defproc[(qq/get-province [province-name (or/c string? symbol?)]) hash-eq?]{
+Returns data of a specified @racket[province-name] of China.
 @examples[#:eval the-eval
 (qq/get-province '河南)
 ]
 }
 
-@defproc[(qq/get-num [node-data (hash-eq?)] [type1 (or/c 'confirm 'dead)] [type2 (or/c 'today 'total)]) number?]{
-Returns a number of @racket[type1] in @racket[type2] of a @racket[node], which @racket[node] is the results of @racket[qq/get-province].
+@defproc[(qq/get-num [node-data (hash-eq?)] [type1 (or/c 'confirm 'dead) 'confirm] [type2 (or/c 'today 'total) 'today]) number?]{
+Returns the number of @racket[type1] in @racket[type2] of the @racket[node-data], which @racket[node-data] is the result of @racket[qq/get-province].
 @examples[#:eval the-eval
 (qq/get-num (qq/get-province '河南) 'confirm 'total)
 ]
@@ -63,12 +59,12 @@ Returns a number of @racket[type1] in @racket[type2] of a specified @racket[city
 (qq/get-num* '河南 'confirm 'total #:city '郑州)
 ]}
 
-@defproc[(qq/filter-by
+@defproc[(qq/sort+filter-by
                 [type1 (or/c 'confirm 'dead)]
                 [type2 (or/c 'today 'total)]) list?]{
 Sorting and filting @racket[qq/data/all-provinces] by @racket[type1] and @racket[type2].
 @examples[#:eval the-eval
-(qq/filter-by 'confirm 'total)]
+(qq/sort+filter-by 'confirm 'total)]
 }
 
 

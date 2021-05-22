@@ -47,7 +47,7 @@
       (hash-ref (hash-ref province type2) type1)
       #f))
 
-(define (qq/filter-by type1 type2) ;; type1 <= { 'confirm 'dead } type2 <= { 'today 'total }
+(define (qq/sort+filter-by type1 type2) ;; type1 <= { 'confirm 'dead } type2 <= { 'today 'total }
   (define sorted-provinces
     (sort qq/data/all-provinces
           (lambda (i1 i2)
