@@ -1,10 +1,11 @@
 #lang scribble/manual
 
 
+
 @require[@for-label[racket/base
                     covid-19/qq
                     covid-19/sina]
-         (for-syntax racket/base)
+         #;rainbow-delimiters
          scribble/eval]
 
 @(define the-eval
@@ -12,19 +13,8 @@
                          '(pretty-print-depth 0)))
 
 
-@(require scribble/core
-          scribble/html-properties)
-
-@(define external-image
-   (elem
-    #:style
-    (style #f
-           (list (alt-tag "img")
-                 (attributes
-                  '((src . "https://racket-lang.org/logo-and-text-1-2.png")))))))
-
-@external-image
-
+@; @jquery-3.5.1
+@; @rainbow-delimiters
 
 
 @title{covid-19}
@@ -54,18 +44,14 @@ Values that returned directly from requesting QQ's covid-19 API.
 @defproc[(qq/get-region [province-name (or/c string? symbol?)]
                         [city-name (or/c string? symbol?)]) hash-eq?]{
 Returns data of a specified @racket[province-name] of China or data of its specified @racket[city-name] if provided.
-}
-@examples/racket-input[
+@examples[#:eval the-eval
 (qq/get-region '河南)
 (qq/get-region '河南 '郑州)
 ]
+}
 
-
-@defproc[(qq/get-num [node-data (hash-eq?)]
-                     [type1 (or/c 'confirm 'dead) 'confirm]
-                     [type2 (or/c 'today 'total) 'today]) number?]{
-Returns the number of @racket[type1] in @racket[type2] of the @racket[node-data],
-which @racket[node-data] is the result of @racket[qq/get-province].
+@defproc[(qq/get-num [node-data (hash-eq?)] [type1 (or/c 'confirm 'dead) 'confirm] [type2 (or/c 'today 'total) 'today]) number?]{
+Returns the number of @racket[type1] in @racket[type2] of the @racket[node-data], which @racket[node-data] is the result of @racket[qq/get-province].
 @examples[#:eval the-eval
 (qq/get-num (qq/get-region '河南) 'confirm 'total)
 ]
