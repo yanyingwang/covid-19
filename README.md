@@ -2,4 +2,4 @@ covid-19
 ========
 
 Please check the doc at:
-http://www.yanying.wang/covid-19/
+https://www.yanying.wang/covid-19/
