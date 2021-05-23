@@ -14,13 +14,12 @@
 (define sina/data/list (hash-ref sina/data 'list))
 (define sina/data/otherlist (hash-ref sina/data 'otherlist))
 
-
 (define (sina/contries/sort+filter-by type)
   (define sorted-contries
     (sort sina/data/otherlist
           (lambda (i1 i2)
-            (define v1 (hash-ref i1 'value))
-            (define v2 (hash-ref i2 'value))
+            (define v1 (hash-ref i1 type))
+            (define v2 (hash-ref i2 type))
             (and (string=? v1 "-") (set! v1 "-1"))
             (and (string=? v2 "-") (set! v2 "-1"))
             (> (string->number v1)
