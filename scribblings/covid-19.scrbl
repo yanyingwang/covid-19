@@ -5,7 +5,7 @@
 @require[@for-label[racket/base
                     covid-19/qq
                     covid-19/sina]
-         #;rainbow-delimiters
+         rainbow-delimiters
          scribble/eval]
 
 @(define the-eval
@@ -13,9 +13,7 @@
                          '(pretty-print-depth 0)))
 
 
-@; @jquery-3.5.1
-@; @rainbow-delimiters
-
+@script/rainbow-delimiters*
 
 @title{covid-19}
 @author[@author+email["Yanying Wang" "yanyingwang1@gmail.com"]]
