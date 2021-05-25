@@ -5,7 +5,7 @@
 @require[@for-label[racket/base
                     covid-19/qq
                     covid-19/sina]
-         rainbow-delimiters
+         scribble-rainbow-delimiters
          scribble/eval]
 
 @(define the-eval
