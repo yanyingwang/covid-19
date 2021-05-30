@@ -2,19 +2,30 @@
 
 (require racket/list racket/port racket/format racket/string racket/provide
          http-client json)
-(provide (matching-identifiers-out #rx"^qq\\/.*" (all-defined-out)))
+(provide covid-19/reload-data/qq
+         (matching-identifiers-out #rx"^qq\\/.*" (all-defined-out)))
 
 
-(define res
+
+
+(define response '())
+(define covid-19/reload-data/qq (make-parameter #t))
+
+(define (do-request)
   (http-get "https://view.inews.qq.com"
             #:path "/g2/getOnsInfo"
             #:data (hasheq 'name "disease_h5")))
 
-(define qq/data
-  (string->jsexpr (hash-ref (http-response-body res) 'data)))
-(define qq/data/china-total (hash-ref qq/data 'chinaTotal))
-(define qq/data/china-add (hash-ref qq/data 'chinaAdd))
-(define qq/data/all-provinces (hash-ref (car (hash-ref qq/data 'areaTree)) 'children))
+(define (qq/data)
+  (and (or (covid-19/reload-data/qq)
+           (empty? response))
+       (set! response (do-request))
+       (covid-19/reload-data/qq #f))
+  (string->jsexpr (hash-ref (http-response-body response) 'data)))
+
+(define (qq/data/china-total) (hash-ref (qq/data) 'chinaTotal))
+(define (qq/data/china-add) (hash-ref (qq/data) 'chinaAdd))
+(define (qq/data/all-provinces) (hash-ref (car (hash-ref (qq/data) 'areaTree)) 'children))
 
 
 (define (qq/get-region name [city-name #f])
@@ -24,7 +35,7 @@
        (set! city-name (symbol->string city-name)))
   (define province
     (findf (lambda (i) (equal? (hash-ref i 'name) name))
-           qq/data/all-provinces))
+           (qq/data/all-provinces)))
   (if city-name
       (findf (lambda (i) (equal? (hash-ref i 'name) city-name))
              (hash-ref province 'children))
@@ -49,7 +60,7 @@
 
 (define (qq/sort+filter-by type1 type2) ;; type1 <= { 'confirm 'dead } type2 <= { 'today 'total }
   (define sorted-provinces
-    (sort qq/data/all-provinces
+    (sort (qq/data/all-provinces)
           (lambda (i1 i2)
             (> (hash-ref (hash-ref i1 type2) type1)
                (hash-ref (hash-ref i2 type2) type1)))))

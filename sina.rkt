@@ -2,21 +2,30 @@
 
 (require racket/list racket/port racket/format racket/string racket/provide
          http-client)
-(provide (matching-identifiers-out #rx"^sina\\/.*" (all-defined-out)))
+(provide covid-19/reload-data/sina
+         (matching-identifiers-out #rx"^sina\\/.*" (all-defined-out)))
 
+
+(define response '())
+(define covid-19/reload-data/sina (make-parameter #t))
 
 ;;;; sina.cn api
-(define res
+(define (do-request)
   (http-get "https://interface.sina.cn"
             #:path "news/wap/fymap2020_data.d.json"))
 
-(define sina/data (hash-ref (http-response-body res) 'data))
-(define sina/data/list (hash-ref sina/data 'list))
-(define sina/data/otherlist (hash-ref sina/data 'otherlist))
+(define (sina/data)
+  (and (or (covid-19/reload-data/sina)
+           (empty? response))
+       (set! response (do-request))
+       (covid-19/reload-data/sina #f))
+  (hash-ref (http-response-body response) 'data))
+(define (sina/data/list) (hash-ref (sina/data) 'list))
+(define (sina/data/otherlist) (hash-ref (sina/data) 'otherlist))
 
 (define (sina/contries/sort+filter-by type)
   (define sorted-contries
-    (sort sina/data/otherlist
+    (sort (sina/data/otherlist)
           (lambda (i1 i2)
             (define v1 (hash-ref i1 type))
             (define v2 (hash-ref i2 type))

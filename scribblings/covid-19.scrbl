@@ -1,7 +1,6 @@
 #lang scribble/manual
 
 
-
 @require[@for-label[racket/base
                     covid-19/qq
                     covid-19/sina]
@@ -19,6 +18,8 @@
 @author[@author+email["Yanying Wang" "yanyingwang1@gmail.com"]]
 Racket wrapper of QQ/Sina's COVID-19 API
 
+@(table-of-contents)
+
 @defmodule[covid-19]
 @itemlist[
 @item{@racket[(require covid)] will do the same as @racket[(require covid/qq covid/sina)].}
@@ -30,13 +31,18 @@ Racket wrapper of QQ/Sina's COVID-19 API
 
 @section{QQ}
 @defmodule[covid-19/qq]
+
+@defparam[covid-19/reload-data/qq v boolean? #:value #t]{
+Whether rerequest QQ's COVID-19 API and reflush cached data or not, which data is used for all the following procedures unless you manully set this to @racket[#f].
+}
+
 @deftogether[(
-@defthing[qq/data hash-eq?]
-@defthing[qq/data/china-total hash-eq?]
-@defthing[qq/data/china-add hash-eq?]
-@defthing[qq/data/all-provinces list?]
+@defproc[(qq/data) hash-eq?]
+@defproc[(qq/data/china-total) hash-eq?]
+@defproc[(qq/data/china-add) hash-eq?]
+@defproc[(qq/data/all-provinces) list?]
 )]{
-Values that returned directly from requesting QQ's covid-19 API.
+Returns corresponding requested data.
 }
 
 @defproc[(qq/get-region [province-name (or/c string? symbol?)]
@@ -79,12 +85,17 @@ Sorting and filting @racket[qq/data/all-provinces] by @racket[type1] and @racket
 
 @section{Sina}
 @defmodule[covid-19/sina]
+
+@defparam[covid-19/reload-data/sina v boolean? #:value #t]{
+Whether rerequest Sina COVID-19 API and reflush cached data or not, which data is used for all the following procedures unless you manully set this to @racket[#f].
+}
+
 @deftogether[(
-@defthing[sina/data hash-eq?]
-@defthing[sina/data/list list?]
-@defthing[sina/data/otherlist list?]
+@defproc[(sina/data) hash-eq?]
+@defproc[(sina/data/list) list?]
+@defproc[(sina/data/otherlist) list?]
 )]{
-Values that returned directly from requesting Sina's covid-19 API.
+Returns corresponding requested data.
 }
 
 @defproc[(sina/contries/sort+filter-by
