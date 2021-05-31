@@ -22,7 +22,7 @@ Racket wrapper of QQ/Sina's COVID-19 API
 
 @defmodule[covid-19]
 @itemlist[
-@item{@racket[(require covid)] will do the same as @racket[(require covid/qq covid/sina)].}
+@item{@racket[(require covid-19)] will do the same as @racket[(require covid-19/qq covid-19/sina)].}
 @item{There is also a website whose data is drived by this pkg for you to check with:
 @linebreak[]
 @url{https://www.yanying.wang/daily-report/}.}
@@ -33,7 +33,7 @@ Racket wrapper of QQ/Sina's COVID-19 API
 @defmodule[covid-19/qq]
 
 @defparam[covid-19/reload-data/qq v boolean? #:value #t]{
-Whether rerequest QQ's COVID-19 API and reflush cached data or not, which data is used for all the following procedures unless you manully set this to @racket[#f].
+Whether rerequest QQ's COVID-19 API and reflush cached data or not, which data is used for all the following procedures.
 }
 
 @deftogether[(
@@ -87,7 +87,7 @@ Sorting and filting @racket[qq/data/all-provinces] by @racket[type1] and @racket
 @defmodule[covid-19/sina]
 
 @defparam[covid-19/reload-data/sina v boolean? #:value #t]{
-Whether rerequest Sina COVID-19 API and reflush cached data or not, which data is used for all the following procedures unless you manully set this to @racket[#f].
+Whether rerequest Sina COVID-19 API and reflush cached data or not, which data is used for all the following procedures.
 }
 
 @deftogether[(
