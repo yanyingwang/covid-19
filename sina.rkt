@@ -9,6 +9,9 @@
 (define response '())
 (define covid-19/reload-data/sina (make-parameter #t))
 
+
+;; https://news.sina.cn/zt_d/yiqing0121
+;; https://news.sina.com.cn/project/fymap/ncp2020_full_data.json?_=1653047170181&callback=?
 ;;;; sina.cn api
 (define (do-request)
   (http-get "https://interface.sina.cn"
