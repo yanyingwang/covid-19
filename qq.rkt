@@ -11,11 +11,8 @@
 
 
 
-;; https://news.qq.com/zt2020/page/feiyan.htm#/
-;; (define (do-request)
-;;   (http-get "https://view.inews.qq.com"
-;;             #:path "/g2/getOnsInfo"
-;;             #:data (hasheq 'name "disease_h5")))
+
+;; https://news.qq.com/zt2020/page/feiyan.htm
 (define (do-request)
   (http-get "https://api.inews.qq.com"
             #:path "/newsqa/v1/query/inner/publish/modules/list"
