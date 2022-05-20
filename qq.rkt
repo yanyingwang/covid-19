@@ -6,22 +6,27 @@
          (matching-identifiers-out #rx"^qq\\/.*" (all-defined-out)))
 
 
-
-
 (define response '())
 (define covid-19/reload-data/qq (make-parameter #t))
 
+
+
+;; https://news.qq.com/zt2020/page/feiyan.htm#/
+;; (define (do-request)
+;;   (http-get "https://view.inews.qq.com"
+;;             #:path "/g2/getOnsInfo"
+;;             #:data (hasheq 'name "disease_h5")))
 (define (do-request)
-  (http-get "https://view.inews.qq.com"
-            #:path "/g2/getOnsInfo"
-            #:data (hasheq 'name "disease_h5")))
+  (http-get "https://api.inews.qq.com"
+            #:path "/newsqa/v1/query/inner/publish/modules/list"
+            #:data (hasheq 'modules "localCityNCOVDataList,diseaseh5Shelf")))
 
 (define (qq/data)
   (and (or (covid-19/reload-data/qq)
            (empty? response))
        (set! response (do-request))
        (covid-19/reload-data/qq #f))
-  (string->jsexpr (hash-ref (http-response-body response) 'data)))
+  (hash-ref (hash-ref (http-response-body response) 'data) 'diseaseh5Shelf))
 
 (define (qq/data/china-total) (hash-ref (qq/data) 'chinaTotal))
 (define (qq/data/china-add) (hash-ref (qq/data) 'chinaAdd))
